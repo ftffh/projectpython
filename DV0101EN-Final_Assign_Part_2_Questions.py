@@ -52,7 +52,7 @@ app.layout = html.Div([
     html.Div(dcc.Dropdown(
             id='select-year',
             options=[{'label': i, 'value': i} for i in year_list],
-            #value='...................'  
+            value='Select-year',
             placeholder='Select Year'
         )),
 
@@ -124,7 +124,7 @@ def update_output_container(selected_statistics, input_year):
         
 # Plot 3 Pie chart for total expenditure share by vehicle type during recessions
         # use groupby to create relevant data for plotting
-        exp_rec= recession_data.groupby('Vehicle_Type')['Total_Expenditure'].sum().reset_index()
+        exp_rec= recession_data.groupby('Vehicle_Type')['Advertising_Expenditure'].sum().r
         R_chart3 = dcc.Graph(
             figure=px.pie(exp_rec, 
                 values='Advertising_Expenditure',
@@ -138,12 +138,12 @@ def update_output_container(selected_statistics, input_year):
                 x='unemployment_rate',
                 y='Automobile_Sales',
                 title="Effect of Unemployment Rate on Vehicle Type and Sales",
-                labels={'variable': 'Variables'}))
+                labels={'unemployment_rate': 'Unemployment Rate', 'Automobile_Sales': 'Average Automobile Sales'},
 
 
         return [
-            html.Div(className='chart-item', children=[html.Div(children=R_chart1),html.Div(children=R_chart2)]),
-            html.Div(className='chart-item', children=[html.Div(children=R_chart3),html.Div(R_chart4)])
+            html.Div(className='chart-item', children=[html.Div(children=R_chart1),html.Div(children=R_chart2)],style={'display': 'flex'}),
+            html.Div(className='chart-item', children=[html.Div(children=R_chart3),html.Div(children=R_chart4)],style={'display': 'flex'})
             ]
 
 
@@ -164,10 +164,10 @@ def update_output_container(selected_statistics, input_year):
             title='Yearly Automobile Sales'))
             
 # Plot 2 Total Monthly Automobile sales using line chart.
-        monthly_sales = yearly_data.groupby('Month')['Automobile_Sales'].sum().reset_index()
+        yearly_data = yearly_data.groupby('Month')['Automobile_Sales'].sum().reset_index()
         Y_chart2 = dcc.Graph(
             figure=px.line(
-                monthly_sales,
+                yearly_data,
                 x='Month',
                 y='Automobile_Sales',
                 title='Total Monthly Automobile Sales'
@@ -178,7 +178,7 @@ def update_output_container(selected_statistics, input_year):
         Y_chart3 = dcc.Graph( 
             figure=px.bar(
                 avr_vdata,
-                x='Vehicle_Type',
+                x='Year',
                 y='Automobile_Sales',
                 title='Average Vehicles Sold by Vehicle Type in the year {}'.format(input_year)))
 
